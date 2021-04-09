@@ -136,13 +136,7 @@ function checkForWin() {
     // TODO: Check four cells to see if they're all legal & all color of current
     // player
     //for each subarray in cells, check if the corresponding color is the same
-    return cells.every(([y, x]) =>
-        y >= 0 &&
-        y < HEIGHT &&
-        x >= 0 &&
-        x < WIDTH &&
-        board[y][x] === currPlayer
-    );
+
   }
 
   for (var y = 0; y < HEIGHT; y++) {
