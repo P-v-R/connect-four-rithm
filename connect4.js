@@ -68,12 +68,14 @@ function makeHtmlBoard() {
 }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
-
 function findSpotForCol(x) {
-  // TODO: write the real version of this, rather than always returning 0
-  
 
-  return 0;
+  for (let i = HEIGHT - 1; i > 0; i--) {
+    if (board[i][x] === null) {
+      return i;
+    }
+  }
+  return null;
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
@@ -86,7 +88,7 @@ function findSpotForCol(x) {
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
   let piece = document.createElement("div");
-  if (currPlayer === 1){
+  if (currPlayer === 1) {
     piece.style.backgroundColor = "blue";
     piece.classList.add("piece", "p1");
   } else {
@@ -101,13 +103,13 @@ function placeInTable(y, x) {
 /** endGame: announce game end */
 
 function endGame(msg) {
-  // TODO: pop up alert message
+ alert("game over");
+ console.log("endGame ran");
 }
 
 /** handleClick: handle click of column top to play piece */
 
 function handleClick(evt) {
-
 
   // get x from ID of clicked cell
   let x = +evt.target.id;
@@ -120,8 +122,9 @@ function handleClick(evt) {
 
   // place piece in board and add to HTML table
   board[y][x] = currPlayer;
-  console.log(board[y])
-  console.log(currPlayer)
+  //console.log(board);
+  console.log([y,x]);
+  //console.log(currPlayer)
   // TODO: add line to update in-memory board
   placeInTable(y, x);
 
@@ -139,7 +142,7 @@ function handleClick(evt) {
   // switch players
   // TODO: switch currPlayer 1 <-> 2
   // id player === 1, set player === 2, vice verse 
-  currPlayer = (currPlayer === 1) ?  2 : 1;
+  currPlayer = (currPlayer === 1) ? 2 : 1;
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -155,6 +158,13 @@ function checkForWin() {
 
     // TODO: Check four cells to see if they're all legal & all color of current
     // player
+    //for each subarray in cells, check if the corresponding color is the same
+    let current = [];
+
+    for(let i = 0;i<cells.length;i++){
+      current.push(document.getElementById(`${cells[i][0]}-${cells[i][1]}`));
+    }
+    console.log(current);
 
   }
 
@@ -169,9 +179,9 @@ function checkForWin() {
       // [ [y, x], [y, x], [y, x], [y, x] ]
 
       let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
-      let vert;
-      let diagDL;
-      let diagDR;
+      let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
+      let diagDL = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+      let diagDR = [[y, x], [y - 1, x + 1], [y - 2, x + 2], [y - 3, x + 3]];
 
       // find winner (only checking each win-possibility as needed)
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
@@ -180,8 +190,6 @@ function checkForWin() {
     }
   }
 }
-
-// function gameOVer
 
 makeBoard();
 makeHtmlBoard();
