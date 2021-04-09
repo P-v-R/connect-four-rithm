@@ -13,16 +13,8 @@ const HEIGHT = 6;
 let currPlayer = 1; // active player: 1 or 2
 let board = []; // array of rows, each row is array of cells  (board[y][x])
 
-/** makeBoard: create in-JS board structure:
- *    board = array of rows, each row is array of cells  (board[y][x])
- */
+// makes a gameboard with X- heigh arrays containing (y/width) elements of null
 function makeBoard() {
-
-  //loop through width
-  //for each width point, create subarray looping out to height
-  //push null to each element of each subarray
-  //push each column to parent board array
-
   for (let i = 0; i < HEIGHT; i++) {
     let column = [];
     for (let k = 0; k < WIDTH; k++) {
@@ -31,13 +23,12 @@ function makeBoard() {
     board.push(column);
   }
   console.log(board);
-
 }
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
 function makeHtmlBoard() {
-  // TODO: get "htmlBoard" variable from the item in HTML w/ID of "board"
   const htmlBoard = document.getElementById("board");
+  
   // creates variable for the top row of the table which holds clicker functionality to select a column to drop your piece
   var selectorRow = document.createElement("tr");
   selectorRow.setAttribute("id", "column-top");
@@ -51,13 +42,10 @@ function makeHtmlBoard() {
     selectorRow.append(headCell);
   }
 
-  // dynamically creates the main part of html board
-  // uses HEIGHT to create table rows
-  // uses WIDTH to create table cells for each row
+  // dynamically creates the main part of html board, starting with HEIGHT
   for (let y = 0; y < HEIGHT; y++) {
     let tableRow = document.createElement("tr");
-
-
+  // for each array of height, append WIDTH worth of td elements
     for (let x = 0; x < WIDTH; x++) {
       let tableCell = document.createElement("td");
       tableCell.setAttribute("id", `${y}-${x}`);
@@ -67,9 +55,8 @@ function makeHtmlBoard() {
   }
 }
 
-/** findSpotForCol: given column x, return top empty y (null if filled) */
+// for each user selection, find the highest spot in the column not occupied by a player piece
 function findSpotForCol(x) {
-
   for (let i = HEIGHT - 1; i > 0; i--) {
     if (board[i][x] === null) {
       return i;
@@ -79,14 +66,8 @@ function findSpotForCol(x) {
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
-
-// place in table func()
-// make a new piece div element. assign class to .piece,
-// x = column y = row
-
-
 function placeInTable(y, x) {
-  // TODO: make a div and insert into correct table cell
+  //make a 'piece' with appropiot player color
   let piece = document.createElement("div");
   if (currPlayer === 1) {
     piece.style.backgroundColor = "blue";
@@ -100,16 +81,16 @@ function placeInTable(y, x) {
   placementSpot.append(piece);
 }
 
-/** endGame: announce game end */
 
+/** endGame: announce game end */
 function endGame(msg) {
  alert("game over");
  console.log("endGame ran");
 }
 
 /** handleClick: handle click of column top to play piece */
-
 function handleClick(evt) {
+
 
   // get x from ID of clicked cell
   let x = +evt.target.id;
@@ -120,12 +101,8 @@ function handleClick(evt) {
     return;
   }
 
-  // place piece in board and add to HTML table
+  // place piece on board script and also on html board
   board[y][x] = currPlayer;
-  //console.log(board);
-  console.log([y,x]);
-  //console.log(currPlayer)
-  // TODO: add line to update in-memory board
   placeInTable(y, x);
 
   // check for win
@@ -159,25 +136,19 @@ function checkForWin() {
     // TODO: Check four cells to see if they're all legal & all color of current
     // player
     //for each subarray in cells, check if the corresponding color is the same
-    let current = [];
-
-    for(let i = 0;i<cells.length;i++){
-      current.push(document.getElementById(`${cells[i][0]}-${cells[i][1]}`));
-    }
-    console.log(current);
-
+    return cells.every(([y, x]) =>
+        y >= 0 &&
+        y < HEIGHT &&
+        x >= 0 &&
+        x < WIDTH &&
+        board[y][x] === currPlayer
+    );
   }
 
-  // using HEIGHT and WIDTH, generate "check list" of coordinates
-  // for 4 cells (starting here) for each of the different
-  // ways to win: horizontal, vertical, diagonalDR, diagonalDL
   for (var y = 0; y < HEIGHT; y++) {
     for (var x = 0; x < WIDTH; x++) {
-      // TODO: assign values to the below variables for each of the ways to win
-      // horizontal has been assigned for you
-      // each should be an array of 4 cell coordinates:
-      // [ [y, x], [y, x], [y, x], [y, x] ]
-
+     
+      // all possible win combos
       let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
       let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
       let diagDL = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
